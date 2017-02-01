@@ -23,36 +23,40 @@ Module Module1
 
 
     Sub Main()
-        pFinder()                                                                                   'Find numbrs of pages from Date.Today
+        pFinder()                                                                                    'Find numbrs of pages from Date.Today
 
         Try
             Dim i As Integer = 1
             While i <= pages
-                Dim aList As ArrayList = getShit(spiderurl & "page/" & i & "/")                     'Take every page and search for Links
+                Dim aList As ArrayList = getShit(spiderurl & "page/" & i & "/")                      'Take every page and search for Links
                 For Each item As String In aList
-                    If Not list.Contains(item) Then                                                 'check if item is allready in list
-                        If item.Contains("720p") Or item.Contains("1080p") Then                     'only choose HD movies or series
-                            list.Add(item)                                                          'add the item
+                    If Not list.Contains(item) Then                                                  'check if item is allready in list
+                        If item.Contains("720p") Or item.Contains("1080p") Then                      'only choose HD movies or series
+                            list.Add(item)                                                           'add the item
                         End If
                     End If
                 Next
-                i += 1                                                                              'Next Site
+                i += 1                                                                               'Next Site
             End While
 
-            Dim file As System.IO.StreamWriter                                                      'write the links to file(only for testing?)
-            file = My.Computer.FileSystem.OpenTextFileWriter("c:\temp\MyTest.html", True)
+            'Dim file As System.IO.StreamWriter                                                      'write the links to file(only for testing?)
+            'file = My.Computer.FileSystem.OpenTextFileWriter("c:\temp\MyTest.html", True)
             For Each item As String In list
-                Console.WriteLine(item, Environment.NewLine)
-                Dim trim As String = Replace(item, spiderurl, "")                                   'removes the main url from string (better Reading)
-                file.WriteLine("<p><a href=" & quote & item & quote & ">" & trim & "</a></p>")      'for html Sytax in File(needs mor testing)
+                Dim retStr As String = regexTesting(item)
+                If Not retStr = Nothing Then
+                    Console.WriteLine(retStr, Environment.NewLine)
+                End If
+                'Console.WriteLine(item, Environment.NewLine)
+                'Dim trim As String = Replace(item, spiderurl, "")                                   'removes the main url from string (better Reading)
+                'file.WriteLine("<p><a href=" & quote & item & quote & ">" & trim & "</a></p>")      'for html Sytax in File(needs mor testing)
             Next
-            file.Close()                                                                            'close the Streamwriter
+            'file.Close()                                                                            'close the Streamwriter
 
         Catch ex As Exception
-            Console.WriteLine(ex.Message, Environment.NewLine)                                                      'Errorhandling for user debugging
+            Console.WriteLine(ex.Message, Environment.NewLine)                                       'Errorhandling for user debugging
             Console.ReadLine()
         End Try
-        Console.ReadLine()                                                                          'let the Consolewindow stay open
+        Console.ReadLine()                                                                           'let the Consolewindow stay open
     End Sub
 
     Private Sub pFinder()
@@ -100,7 +104,27 @@ Module Module1
     End Function
 
 
-
+    Private Function regexTesting(ByVal str As String)
+        Dim aReturn As String = Nothing
+        Try
+            '           {http://www.movie-blog.org/2017/02/01/(.*?)-[1-2]{1}[0-9]{3}-.*?}
+            'example url http://www.movie-blog.org/2017/02/01/kung-fu-killer-german-dts-dl-2014-1080p-bluray-x264-leethd-2/
+            'regexstr [1-2]{1}[0-9]{3} find 4 digits 1666 2999 1587 for year
+            Dim strRegex As String = spiderurl & "(.*?\-[1-2]{1}[0-9]{3})\-.*?"                                     'with year
+            'Dim strRegex As String = spiderurl & "(.*?)\-[1-2]{1}[0-9]{3}\-.*?"                                    'without year
+            Dim HrefRegex As New Regex(strRegex, RegexOptions.IgnoreCase Or RegexOptions.Compiled)                  'regex options to find the string in response 
+            Dim HrefMatch As Match = HrefRegex.Match(str)                                                           'Find matches in String
+            If HrefMatch.Success = True Then                                                                        'String Found = True 1 or more strings matching
+                Dim regStr As String = HrefMatch.Groups(1).Value                                                    'get match
+                aReturn = Replace(regStr, "-", " ")                                                                 'replace - with space
+                Return aReturn
+            End If
+        Catch ex As Exception
+            Console.WriteLine(ex.Message, Environment.NewLine)                                                      'Errorhandling for user debugging
+            Console.ReadLine()
+        End Try
+        Return aReturn
+    End Function
 
 
 End Module
