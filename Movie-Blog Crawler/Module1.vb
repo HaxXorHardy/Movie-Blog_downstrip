@@ -49,46 +49,52 @@ Module Module1
             file.Close()                                                                            'close the Streamwriter
 
         Catch ex As Exception
+            Console.WriteLine(ex.Message, Environment.NewLine)                                                      'Errorhandling for user debugging
+            Console.ReadLine()
         End Try
         Console.ReadLine()                                                                          'let the Consolewindow stay open
     End Sub
 
     Private Sub pFinder()
         Try
-            ''''<span class="pages">Seite 2 von 11</span>
-            Dim strRegex As String = "<span.*?Seite 1 von (.*?)<\/span>"
-            Dim Request As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(spiderurl & "page/1/")
-            Dim myWebResponse = CType(Request.GetResponse(), HttpWebResponse)
-            Dim myStreamReader = New StreamReader(myWebResponse.GetResponseStream())
-            Dim strSource = myStreamReader.ReadToEnd
-            Dim HrefRegex As New Regex(strRegex, RegexOptions.IgnoreCase Or RegexOptions.Compiled)
-            Dim HrefMatch As Match = HrefRegex.Match(strSource)
-            While HrefMatch.Success = True
-                Dim num As String = HrefMatch.Groups(1).Value
-                Console.WriteLine("Pages: " & num, Environment.NewLine)
-                pages = Convert.ToInt32(num)
-                HrefMatch = HrefMatch.NextMatch
+            '<span class="pages">Seite 2 von 11</span>  find 11
+            Dim strRegex As String = "<span.*?Seite 1 von (.*?)<\/span>"                                            'crasy regex string to find Pagenumbers 
+            'regextutorial https://www.vb-paradise.de/index.php/Thread/34042-RegEx-Tutorial-Blutige-Anf%C3%A4nger-und-Fortgeschrittene/
+            Dim Request As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(spiderurl & "page/1/")      'new Webrequest
+            Dim myWebResponse = CType(Request.GetResponse(), HttpWebResponse)                                       'shitty thing
+            Dim myStreamReader = New StreamReader(myWebResponse.GetResponseStream())                                'streamreader to get response from webrequest live
+            Dim strSource = myStreamReader.ReadToEnd                                                                'finish reading of response
+            Dim HrefRegex As New Regex(strRegex, RegexOptions.IgnoreCase Or RegexOptions.Compiled)                  'regex options to find the string in response
+            Dim HrefMatch As Match = HrefRegex.Match(strSource)                                                     'Find matches in String
+            While HrefMatch.Success = True                                                                          'String Found = True 1 or more strings matching
+                Dim num As String = HrefMatch.Groups(1).Value                                                       'get first match
+                Console.WriteLine("Pages: " & num, Environment.NewLine)                                             'output for testing
+                pages = Convert.ToInt32(num)                                                                        'convert String to Integer
+                HrefMatch = HrefMatch.NextMatch                                                                     'More matches? get them and print this shit out
             End While
         Catch ex As Exception
+            Console.WriteLine(ex.Message, Environment.NewLine)                                                      'Errorhandling for user debugging
+            Console.ReadLine()
         End Try
     End Sub
     Private Function getShit(ByVal url As String) As ArrayList
-
-        Dim aReturn As New ArrayList
+        Dim aReturn As New ArrayList                                                                                 'create the returnvariable
         Try
-            Dim strRegex As String = "<a.*?href=""(.*?)"".*?>(.*?)</a>"
-            Dim Request As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
-            Dim myWebResponse = CType(Request.GetResponse(), HttpWebResponse)
-            Dim myStreamReader = New StreamReader(myWebResponse.GetResponseStream())
-            Dim strSource = myStreamReader.ReadToEnd
-            Dim HrefRegex As New Regex(strRegex, RegexOptions.IgnoreCase Or RegexOptions.Compiled)
-            Dim HrefMatch As Match = HrefRegex.Match(strSource)
-            While HrefMatch.Success = True
-                Dim pUrl As String = HrefMatch.Groups(1).Value
-                If pUrl.Contains(spiderurl) AndAlso Not pUrl.Contains("page") AndAlso Not pUrl.Contains("#") Then aReturn.Add(pUrl)
-                HrefMatch = HrefMatch.NextMatch
+            Dim strRegex As String = "<a.*?href=""(.*?)"".*?>(.*?)</a>"                                              'crasy regex string to find Pagenumbers
+            Dim Request As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)                         'new Webrequest
+            Dim myWebResponse = CType(Request.GetResponse(), HttpWebResponse)                                        'shitty thing
+            Dim myStreamReader = New StreamReader(myWebResponse.GetResponseStream())                                 'streamreader to get response from webrequest live
+            Dim strSource = myStreamReader.ReadToEnd                                                                 'finish reading of response
+            Dim HrefRegex As New Regex(strRegex, RegexOptions.IgnoreCase Or RegexOptions.Compiled)                   'regex options to find the string in response 
+            Dim HrefMatch As Match = HrefRegex.Match(strSource)                                                      'Find matches in String
+            While HrefMatch.Success = True                                                                           'String Found = True 1 or more strings matching
+                Dim pUrl As String = HrefMatch.Groups(1).Value                                                       'get first match
+                If pUrl.Contains(spiderurl) AndAlso Not pUrl.Contains("page") AndAlso Not pUrl.Contains("#") Then aReturn.Add(pUrl) 'precheck if link contains everything we want and fill the ReturnArray
+                HrefMatch = HrefMatch.NextMatch                                                                      'go to next match
             End While
         Catch ex As Exception
+            Console.WriteLine(ex.Message, Environment.NewLine)                                                      'Errorhandling for user debugging
+            Console.ReadLine()
         End Try
         Return aReturn
     End Function
