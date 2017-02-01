@@ -8,7 +8,8 @@ Imports System.Text.RegularExpressions
 Module Module1
 
 #Region "Public_Dims"
-    Dim dt As DateTime = Date.Today.AddDays(-2)
+    'Dim dt As DateTime = Date.Today.AddDays(-2) 'for Testing
+    Dim dt As DateTime = Date.Today
     Dim month As String = dt.ToString("MM", CultureInfo.InvariantCulture)
     Dim year As String = dt.ToString("yyyy", CultureInfo.InvariantCulture)
     Dim day As String = dt.ToString("dd", CultureInfo.InvariantCulture)
