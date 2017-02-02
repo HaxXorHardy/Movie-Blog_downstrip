@@ -22,26 +22,6 @@ Module Module1
 
 #End Region
 
-
-    'Public Function goggleSearch(searchWord As String)              ' bullshit need to pay for more requests (Dayly limit)
-    '    Dim aReturn As String = Nothing
-    '    Try
-    '        Dim query As String = searchWord & " Film"
-    '        Dim customSearchService As New CustomsearchService(New Google.Apis.Services.BaseClientService.Initializer() With {.ApiKey = gApiK})
-    '        Dim listRequest As Google.Apis.Customsearch.v1.CseResource.ListRequest = customSearchService.Cse.List(query)
-    '        listRequest.Cx = sEngine
-    '        Dim search As Search = listRequest.Execute()
-    '        For Each item In search.Items
-    '            'Console.WriteLine("Title : " + item.Title + Environment.NewLine + "Link : " + item.Link + Environment.NewLine + Environment.NewLine)
-    '            Return item.Title
-    '        Next
-    '    Catch ex As Exception
-    '        Console.WriteLine(ex.Message, Environment.NewLine)                                       'Errorhandling for user debugging
-    '        Console.ReadLine()
-    '    End Try
-    '    Return aReturn
-    'End Function
-
     Sub Main()
         pFinder()                                                                                    'Find numbrs of pages from Date.Today
         Try
@@ -110,6 +90,7 @@ Module Module1
             Console.ReadLine()
         End Try
     End Sub
+
     Private Function getShit(ByVal url As String) As ArrayList
         Dim aReturn As New ArrayList                                                                                 'create the returnvariable
         Try
@@ -131,7 +112,6 @@ Module Module1
         End Try
         Return aReturn
     End Function
-
 
     Private Function findTitle(ByVal str As String)
         Dim aReturn As String = Nothing
@@ -158,30 +138,49 @@ Module Module1
         Return aReturn
     End Function
 
+    'Private Function getRealName(ByVal url As String)  'dont work only for testing
+    '    Dim aReturn As String = Nothing
+    '    Try
+    '        Dim Request As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://www.moviepilot.de/movies/" & url)                         'new Webrequest
+    '        Dim myWebResponse = CType(Request.GetResponse(), HttpWebResponse)                                        'shitty thing
+    '        Dim myStreamReader = New StreamReader(myWebResponse.GetResponseStream())                                 'streamreader to get response from webrequest live
+    '        Dim strSource = myStreamReader.ReadToEnd                                                                 'finish reading of response
 
-    Private Function getRealName(ByVal url As String)
-        Dim aReturn As String = Nothing
-        Try
-            Dim Request As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://www.moviepilot.de/movies/" & url)                         'new Webrequest
-            Dim myWebResponse = CType(Request.GetResponse(), HttpWebResponse)                                        'shitty thing
-            Dim myStreamReader = New StreamReader(myWebResponse.GetResponseStream())                                 'streamreader to get response from webrequest live
-            Dim strSource = myStreamReader.ReadToEnd                                                                 'finish reading of response
+    '        '<h1 class="movie--headline" itemprop="name">Alice in den Städten</h1>
+    '        'Dim strRegex As String = "<h1 class\=" & "movie\-\-headline"" itemprop\=""name"">(.*?)<\/h1>"               'regex string to find title
+    '        Dim strRegex As String = "(.*?)"
+    '        Dim HrefRegex As New Regex(strRegex, RegexOptions.IgnoreCase Or RegexOptions.Compiled)                   'regex options to find the string in response 
+    '        Dim HrefMatch As Match = HrefRegex.Match(strSource)                                                      'Find matches in String
+    '        If HrefMatch.Success = True Then                                                                         'String Found = True 1 or more strings matching
+    '            Dim regStr As String = HrefMatch.Groups(1).Value                                                     'get match
+    '            aReturn = regStr                                                                                     '
+    '            Return aReturn
+    '        End If
+    '    Catch ex As Exception
+    '        Console.WriteLine(ex.Message, Environment.NewLine)                                                       'Errorhandling for user debugging
+    '        Console.ReadLine()
+    '    End Try
+    '    Return aReturn
+    'End Function
 
-            '<h1 class="movie--headline" itemprop="name">Alice in den Städten</h1>
-            'Dim strRegex As String = "<h1 class\=" & "movie\-\-headline"" itemprop\=""name"">(.*?)<\/h1>"               'regex string to find title
-            Dim strRegex As String = "(.*?)"
-            Dim HrefRegex As New Regex(strRegex, RegexOptions.IgnoreCase Or RegexOptions.Compiled)                   'regex options to find the string in response 
-            Dim HrefMatch As Match = HrefRegex.Match(strSource)                                                      'Find matches in String
-            If HrefMatch.Success = True Then                                                                         'String Found = True 1 or more strings matching
-                Dim regStr As String = HrefMatch.Groups(1).Value                                                     'get match
-                aReturn = regStr                                                                                     '
-                Return aReturn
-            End If
-        Catch ex As Exception
-            Console.WriteLine(ex.Message, Environment.NewLine)                                                       'Errorhandling for user debugging
-            Console.ReadLine()
-        End Try
-        Return aReturn
-    End Function 'for testing doesnt work xD
+    'Public Function goggleSearch(searchWord As String)              ' bullshit need to pay for more requests (Dayly limit)
+    '    Dim aReturn As String = Nothing
+    '    Try
+    '        Dim query As String = searchWord & " Film"
+    '        Dim customSearchService As New CustomsearchService(New Google.Apis.Services.BaseClientService.Initializer() With {.ApiKey = gApiK})
+    '        Dim listRequest As Google.Apis.Customsearch.v1.CseResource.ListRequest = customSearchService.Cse.List(query)
+    '        listRequest.Cx = sEngine
+    '        Dim search As Search = listRequest.Execute()
+    '        For Each item In search.Items
+    '            'Console.WriteLine("Title : " + item.Title + Environment.NewLine + "Link : " + item.Link + Environment.NewLine + Environment.NewLine)
+    '            Return item.Title
+    '        Next
+    '    Catch ex As Exception
+    '        Console.WriteLine(ex.Message, Environment.NewLine)                                       'Errorhandling for user debugging
+    '        Console.ReadLine()
+    '    End Try
+    '    Return aReturn
+    'End Function
+
 
 End Module
