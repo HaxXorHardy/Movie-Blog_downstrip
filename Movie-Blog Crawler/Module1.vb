@@ -3,8 +3,6 @@ Imports System.Globalization
 Imports System.IO
 Imports System.Net
 Imports System.Text.RegularExpressions
-Imports Google.Apis.Customsearch.v1
-Imports Google.Apis.Customsearch.v1.Data
 
 Module Module1
 
@@ -45,9 +43,7 @@ Module Module1
     'End Function
 
     Sub Main()
-
         pFinder()                                                                                    'Find numbrs of pages from Date.Today
-
         Try
             Dim i As Integer = 1
             While i <= pages
@@ -60,7 +56,7 @@ Module Module1
                                     list.Add(item)                                                           'add the item
                                 End If
                             End If
-                            End If
+                        End If
                     End If
                 Next
                 i += 1                                                                               'Next Site
@@ -84,7 +80,6 @@ Module Module1
                 'file.WriteLine("<p><a href=" & quote & item & quote & ">" & trim & "</a></p>")      'for html Sytax in File(needs mor testing)
             Next
             'file.Close()                                                                            'close the Streamwriter
-
         Catch ex As Exception
             Console.WriteLine(ex.Message, Environment.NewLine)                                       'Errorhandling for user debugging
             Console.ReadLine()
