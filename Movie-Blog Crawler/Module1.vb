@@ -34,19 +34,28 @@ Module Module1
             listH = listHelper()                                                                            'creates a link list from pages
             Dim outP As New ArrayList
             Dim x As Integer = 1
+            Dim cHelper As Boolean = False
             For Each item As String In listH
                 Dim retStr As String = findTitle(item)
                 If Not retStr = Nothing Then
                     If Not outP.Contains(retStr) Then
                         For Each arr As String In findArr
-                            If retStr.Contains(arr) Then Console.WriteLine("Gefunden!!!!")
+                            If retStr.Contains(arr) Then
+                                Console.ForegroundColor = ConsoleColor.Green
+                                Console.WriteLine((String.Format("{0:000}", x) & ": " & retStr), nl)
+                                Console.ResetColor()
+                                cHelper = True
+                            End If
                         Next
                         outP.Add(retStr)
+                        If cHelper = False Then
                             Console.WriteLine((String.Format("{0:000}", x) & ": " & retStr), nl)
+                        End If
                         writeFile(item.ToString, retStr)
+                        cHelper = False
                         x += 1
-                    End If
-                End If
+                            End If
+                        End If
             Next
 
             Console.WriteLine("Ende.....")
@@ -277,7 +286,11 @@ Module Module1
             Dim HrefMatchY As Match = HrefRegexY.Match(str)                                                           'Find matches in String
             If HrefMatchY.Success = True Then                                                                        'String Found = True 1 or more strings matching
                 Dim regStrY As String = HrefMatchY.Groups(1).Value                                                    'get match
-                regStrY = regStrY.Replace("ae", "ä").Replace("oe", "ö").Replace("ue", "ü").Replace("-", " ")          'replace chars
+                'If Not regStrY.Contains("-of-") Or Not regStrY.Contains("-and-") Or Not regStrY.Contains("the-") Or Not regStrY.Contains("-at-") Then
+                '    regStrY = regStrY.Replace("ae", "ä").Replace("oe", "ö").Replace("ue", "ü").Replace("-", " ")          'replace chars
+                'Else
+                regStrY = regStrY.Replace("-", " ")
+                'End If
                 aReturn = ti.ToTitleCase(regStrY)                                                                    'Word correction (uppercase chars)
                 Return aReturn
             Else
@@ -285,12 +298,16 @@ Module Module1
                 Dim HrefMatchG As Match = HrefRegexG.Match(str)                                                           'Find matches in String
                 If HrefMatchG.Success = True Then                                                                        'String Found = True 1 or more strings matching
                     Dim regStrG As String = HrefMatchG.Groups(1).Value                                                    'get match
-                    regStrG = regStrG.Replace("ae", "ä").Replace("oe", "ö").Replace("ue", "ü").Replace("-", " ")          'replace chars
+                    'If Not regStrG.Contains("-of-") Or Not regStrG.Contains("-and-") Or Not regStrG.Contains("the-") Or Not regStrG.Contains("-at-") Then
+                    'regStrG = regStrG.Replace("ae", "ä").Replace("oe", "ö").Replace("ue", "ü").Replace("-", " ")          'replace chars
+                    'Else
+                    regStrG = regStrG.Replace("-", " ")
+                    ' End If
                     aReturn = ti.ToTitleCase(regStrG)                                                                    'Word correction (uppercase chars)
-                    'Console.WriteLine(aReturn & nl, nl)
-                    Return aReturn
-                Else
-                End If
+                        'Console.WriteLine(aReturn & nl, nl)
+                        Return aReturn
+                    Else
+                    End If
             End If
         Catch ex As Exception
             Console.WriteLine(ex.Message, nl)                                                                       'Errorhandling for user debugging
@@ -327,11 +344,13 @@ Module Module1
 
     Private Function readFilms()
         Dim txtReader As New StreamReader(My.Application.Info.DirectoryPath & "\releases.txt")
-        Dim sLine As String = ""
+        Dim ti As TextInfo = CultureInfo.CurrentCulture.TextInfo
+        Dim sLine As String = Nothing
         Dim aReturn As New ArrayList()
         Do
             sLine = txtReader.ReadLine()
             If Not sLine Is Nothing Then
+                sLine = ti.ToTitleCase(sLine.Replace("ä", "ae").Replace("ö", "oe").Replace("ü", "ue").Replace("ß", "ss").Replace("-", " "))
                 aReturn.Add(sLine)
             End If
         Loop Until sLine Is Nothing
