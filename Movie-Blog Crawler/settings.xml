@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <!--Possibile 720p 1080p SD -->
+  <quality>720p</quality>
+  <!-- Possible BluRay DVD Webrip other-->
+  <source>BluRay</source>
+  <!-- Serie Possible True False-->
+  <series>True</series>  
+</Settings>
+
