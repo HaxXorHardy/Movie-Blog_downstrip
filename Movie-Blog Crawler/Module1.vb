@@ -27,6 +27,8 @@ Module Module1
     Sub Main()
         Try
             settingHelper()
+            Dim findArr As New ArrayList
+            findArr = readFilms()
             pFinder()                                                                                       'Find numbrs of pages from Date.Today
             Dim listH As New ArrayList
             listH = listHelper()                                                                            'creates a link list from pages
@@ -36,8 +38,11 @@ Module Module1
                 Dim retStr As String = findTitle(item)
                 If Not retStr = Nothing Then
                     If Not outP.Contains(retStr) Then
+                        For Each arr As String In findArr
+                            If retStr.Contains(arr) Then Console.WriteLine("Gefunden!!!!")
+                        Next
                         outP.Add(retStr)
-                        Console.WriteLine((String.Format("{0:000}", x) & ": " & retStr), nl)
+                            Console.WriteLine((String.Format("{0:000}", x) & ": " & retStr), nl)
                         writeFile(item.ToString, retStr)
                         x += 1
                     End If
@@ -195,7 +200,7 @@ Module Module1
     End Function
 
     Private Sub writeFile(ByVal strUrl As String, ByVal strName As String)
-        Dim filePath As String = "c:\temp\MyTest.html"
+        Dim filePath As String = My.Application.Info.DirectoryPath & "\MyTest.html"
         Dim fileWrite As System.IO.StreamWriter                                                                  'write the links to file(only for testing?)
         If Not File.Exists(filePath) Then
             fileWrite = My.Computer.FileSystem.OpenTextFileWriter(filePath, True)
@@ -319,6 +324,20 @@ Module Module1
             Console.WriteLine("The filename you selected was not found.", nl)
         End If
     End Sub
+
+    Private Function readFilms()
+        Dim txtReader As New StreamReader(My.Application.Info.DirectoryPath & "\releases.txt")
+        Dim sLine As String = ""
+        Dim aReturn As New ArrayList()
+        Do
+            sLine = txtReader.ReadLine()
+            If Not sLine Is Nothing Then
+                aReturn.Add(sLine)
+            End If
+        Loop Until sLine Is Nothing
+        txtReader.Close()
+        Return aReturn
+    End Function
 
     'Private Function getRealName(ByVal url As String)  'dont work only for testing
     '    Dim aReturn As String = Nothing
