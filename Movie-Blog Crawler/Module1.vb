@@ -17,13 +17,15 @@ Module Module1
     Const quote As String = Chr(34)                                                                 'quote(") for text 
     Public spiderurl = "http://www.movie-blog.org/" & year & "/" & month & "/" & day & "/"          'the mainurl from Today 
     Dim nl = Environment.NewLine
+    Dim setSerie As Boolean
+    Dim setQuality As String
+    Dim setSource As String
 
 #End Region
 
     Sub Main()
         Try
-            xmlTesting()
-            Console.ReadLine()
+            settingHelper()
             pFinder()                                                                                       'Find numbrs of pages from Date.Today
             Dim listH As New ArrayList
             listH = listHelper()                                                                            'creates a link list from pages
@@ -57,13 +59,128 @@ Module Module1
             Dim aList As ArrayList = getShit(spiderurl & "page/" & i & "/")                                         'Take every page and search for Links
             For Each item As String In aList
                 If Not aReturn.Contains(item) Then                                                                  'check if item is allready in list
-                    If item.Contains("720p") Or item.Contains("1080p") Then                                         'only choose HD movies or series
-                        If item.Contains("bdrip") Or item.Contains("bluray") Then
-                            If Not item.Contains("s0") Or Not item.Contains("s1") Or Not item.Contains("s2") Then
-                                aReturn.Add(item)                                                                   'add the item
+                    Select Case setSerie
+                        Case True
+                            If item.Contains("-s0") Or item.Contains("-s1") Or item.Contains("-s2") Then
+                                Select Case setQuality
+                                    Case "1080p"
+                                        If item.Contains("1080p") Then
+                                            Select Case setSource
+                                                Case "BluRay"
+                                                    If item.Contains("bdrip") Or item.Contains("bluray") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                                Case "DVD"
+                                                    If item.Contains("dvd") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                                Case "other"
+                                                    If Not item.Contains("bdrip") Or Not item.Contains("dvd") Or Not item.Contains("bluray") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                            End Select
+                                        End If
+                                    Case "720p"
+                                        If item.Contains("720p") Then
+                                            Select Case setSource
+                                                Case "BluRay"
+                                                    If item.Contains("bdrip") Or item.Contains("bluray") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                                Case "DVD"
+                                                    If item.Contains("dvd") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                                Case "other"
+                                                    If Not item.Contains("bdrip") Or Not item.Contains("dvd") Or Not item.Contains("bluray") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                            End Select
+                                        End If
+                                    Case "SD"
+                                        If Not item.Contains("720p") Or Not item.Contains("1080p") Then
+                                            Select Case setSource
+                                                Case "BluRay"
+                                                    If item.Contains("bdrip") Or item.Contains("bluray") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                                Case "DVD"
+                                                    If item.Contains("dvd") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                                Case "other"
+                                                    If Not item.Contains("bdrip") Or Not item.Contains("dvd") Or Not item.Contains("bluray") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                            End Select
+                                        End If
+                                End Select
                             End If
-                        End If
-                    End If
+                        Case False
+                            If Not item.Contains("-s0") AndAlso Not item.Contains("-s1") AndAlso Not item.Contains("-s2") Then
+                                Select Case setQuality
+                                    Case "1080p"
+                                        If item.Contains("1080p") Then
+                                            Select Case setSource
+                                                Case "BluRay"
+                                                    If item.Contains("bdrip") Or item.Contains("bluray") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                                Case "DVD"
+                                                    If item.Contains("dvd") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                                Case "other"
+                                                    If Not item.Contains("bdrip") Or Not item.Contains("dvd") Or Not item.Contains("bluray") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                            End Select
+                                        End If
+                                    Case "720p"
+                                        If item.Contains("720p") Then
+                                            Select Case setSource
+                                                Case "BluRay"
+                                                    If item.Contains("bdrip") Or item.Contains("bluray") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                                Case "DVD"
+                                                    If item.Contains("dvd") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                                Case "other"
+                                                    If Not item.Contains("bdrip") Or Not item.Contains("dvd") Or Not item.Contains("bluray") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                            End Select
+                                        End If
+                                    Case "SD"
+                                        If Not item.Contains("720p") Or Not item.Contains("1080p") Then
+                                            Select Case setSource
+                                                Case "BluRay"
+                                                    If item.Contains("bdrip") Or item.Contains("bluray") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                                Case "DVD"
+                                                    If item.Contains("dvd") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                                Case "other"
+                                                    If Not item.Contains("bdrip") Or Not item.Contains("dvd") Or Not item.Contains("bluray") Then
+                                                        aReturn.Add(item)
+                                                    End If
+                                            End Select
+                                        End If
+                                End Select
+                            End If
+                    End Select
+
+                    'If item.Contains("720p") Or item.Contains("1080p") Then                                         'only choose HD movies or series
+                    '    If item.Contains("bdrip") Or item.Contains("bluray") Then
+                    '        If Not item.Contains("s0") Or Not item.Contains("s1") Or Not item.Contains("s2") Then
+                    '            aReturn.Add(item)                                                                   'add the item
+                    '        End If
+                    '    End If
+                    'End If
                 End If
             Next
             i += 1                                                                                                  'Next Site
@@ -171,7 +288,7 @@ Module Module1
         Return aReturn
     End Function
 
-    Private Sub xmlTesting()
+    Private Sub settingHelper()
         Dim settingPath = My.Application.Info.DirectoryPath & "\settings.xml"
         If System.IO.File.Exists(settingPath) Then
             Dim settingsRead As XmlReader = New XmlTextReader(settingPath)
@@ -179,13 +296,13 @@ Module Module1
                 Dim type = settingsRead.NodeType
                 If (type = XmlNodeType.Element) Then
                     If (settingsRead.Name = "quality") Then
-                        Console.WriteLine(settingsRead.ReadInnerXml.ToString(), nl)
+                        setQuality = settingsRead.ReadInnerXml.ToString()
                     End If
                     If (settingsRead.Name = "source") Then
-                        Console.WriteLine(settingsRead.ReadInnerXml.ToString(), nl)
+                        setSource = settingsRead.ReadInnerXml.ToString()
                     End If
                     If (settingsRead.Name = "series") Then
-                        Console.WriteLine(settingsRead.ReadInnerXml.ToString(), nl)
+                        setSerie = Convert.ToBoolean(settingsRead.ReadInnerXml.ToString())
                     End If
                 End If
             End While
