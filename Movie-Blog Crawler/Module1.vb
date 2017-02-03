@@ -20,6 +20,7 @@ Module Module1
     Dim setSerie As Boolean
     Dim setQuality As String
     Dim setSource As String
+    Dim setAll As Boolean
 
 #End Region
 
@@ -59,119 +60,124 @@ Module Module1
             Dim aList As ArrayList = getShit(spiderurl & "page/" & i & "/")                                         'Take every page and search for Links
             For Each item As String In aList
                 If Not aReturn.Contains(item) Then                                                                  'check if item is allready in list
-                    Select Case setSerie
+                    Select Case setAll
                         Case True
-                            If item.Contains("-s0") Or item.Contains("-s1") Or item.Contains("-s2") Then
-                                Select Case setQuality
-                                    Case "1080p"
-                                        If item.Contains("1080p") Then
-                                            Select Case setSource
-                                                Case "BluRay"
-                                                    If item.Contains("bdrip") Or item.Contains("bluray") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                                Case "DVD"
-                                                    If item.Contains("dvd") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                                Case "other"
-                                                    If Not item.Contains("bdrip") Or Not item.Contains("dvd") Or Not item.Contains("bluray") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                            End Select
-                                        End If
-                                    Case "720p"
-                                        If item.Contains("720p") Then
-                                            Select Case setSource
-                                                Case "BluRay"
-                                                    If item.Contains("bdrip") Or item.Contains("bluray") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                                Case "DVD"
-                                                    If item.Contains("dvd") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                                Case "other"
-                                                    If Not item.Contains("bdrip") Or Not item.Contains("dvd") Or Not item.Contains("bluray") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                            End Select
-                                        End If
-                                    Case "SD"
-                                        If Not item.Contains("720p") Or Not item.Contains("1080p") Then
-                                            Select Case setSource
-                                                Case "BluRay"
-                                                    If item.Contains("bdrip") Or item.Contains("bluray") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                                Case "DVD"
-                                                    If item.Contains("dvd") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                                Case "other"
-                                                    If Not item.Contains("bdrip") Or Not item.Contains("dvd") Or Not item.Contains("bluray") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                            End Select
-                                        End If
-                                End Select
-                            End If
+                            aReturn.Add(item)
                         Case False
-                            If Not item.Contains("-s0") AndAlso Not item.Contains("-s1") AndAlso Not item.Contains("-s2") Then
-                                Select Case setQuality
-                                    Case "1080p"
-                                        If item.Contains("1080p") Then
-                                            Select Case setSource
-                                                Case "BluRay"
-                                                    If item.Contains("bdrip") Or item.Contains("bluray") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                                Case "DVD"
-                                                    If item.Contains("dvd") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                                Case "other"
-                                                    If Not item.Contains("bdrip") Or Not item.Contains("dvd") Or Not item.Contains("bluray") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                            End Select
-                                        End If
-                                    Case "720p"
-                                        If item.Contains("720p") Then
-                                            Select Case setSource
-                                                Case "BluRay"
-                                                    If item.Contains("bdrip") Or item.Contains("bluray") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                                Case "DVD"
-                                                    If item.Contains("dvd") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                                Case "other"
-                                                    If Not item.Contains("bdrip") Or Not item.Contains("dvd") Or Not item.Contains("bluray") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                            End Select
-                                        End If
-                                    Case "SD"
-                                        If Not item.Contains("720p") Or Not item.Contains("1080p") Then
-                                            Select Case setSource
-                                                Case "BluRay"
-                                                    If item.Contains("bdrip") Or item.Contains("bluray") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                                Case "DVD"
-                                                    If item.Contains("dvd") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                                Case "other"
-                                                    If Not item.Contains("bdrip") Or Not item.Contains("dvd") Or Not item.Contains("bluray") Then
-                                                        aReturn.Add(item)
-                                                    End If
-                                            End Select
-                                        End If
-                                End Select
-                            End If
+                            Select Case setSerie
+                                Case True
+                                    If item.Contains("-s0") Or item.Contains("-s1") Or item.Contains("-s2") Then
+                                        Select Case setQuality
+                                            Case "1080p"
+                                                If item.Contains("1080p") Then
+                                                    Select Case setSource
+                                                        Case "BluRay"
+                                                            If item.Contains("bdrip") Or item.Contains("bluray") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                        Case "DVD"
+                                                            If item.Contains("dvd") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                        Case "other"
+                                                            If Not item.Contains("bdrip") AndAlso Not item.Contains("dvd") AndAlso Not item.Contains("bluray") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                    End Select
+                                                End If
+                                            Case "720p"
+                                                If item.Contains("720p") Then
+                                                    Select Case setSource
+                                                        Case "BluRay"
+                                                            If item.Contains("bdrip") Or item.Contains("bluray") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                        Case "DVD"
+                                                            If item.Contains("dvd") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                        Case "other"
+                                                            If Not item.Contains("bdrip") AndAlso Not item.Contains("dvd") AndAlso Not item.Contains("bluray") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                    End Select
+                                                End If
+                                            Case "SD"
+                                                If Not item.Contains("720p") Or Not item.Contains("1080p") Then
+                                                    Select Case setSource
+                                                        Case "BluRay"
+                                                            If item.Contains("bdrip") Or item.Contains("bluray") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                        Case "DVD"
+                                                            If item.Contains("dvd") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                        Case "other"
+                                                            If Not item.Contains("bdrip") AndAlso Not item.Contains("dvd") AndAlso Not item.Contains("bluray") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                    End Select
+                                                End If
+                                        End Select
+                                    End If
+                                Case False
+                                    If Not item.Contains("-s0") AndAlso Not item.Contains("-s1") AndAlso Not item.Contains("-s2") Then
+                                        Select Case setQuality
+                                            Case "1080p"
+                                                If item.Contains("1080p") Then
+                                                    Select Case setSource
+                                                        Case "BluRay"
+                                                            If item.Contains("bdrip") Or item.Contains("bluray") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                        Case "DVD"
+                                                            If item.Contains("dvd") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                        Case "other"
+                                                            If Not item.Contains("bdrip") AndAlso Not item.Contains("dvd") AndAlso Not item.Contains("bluray") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                    End Select
+                                                End If
+                                            Case "720p"
+                                                If item.Contains("720p") Then
+                                                    Select Case setSource
+                                                        Case "BluRay"
+                                                            If item.Contains("bdrip") Or item.Contains("bluray") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                        Case "DVD"
+                                                            If item.Contains("dvd") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                        Case "other"
+                                                            If Not item.Contains("bdrip") AndAlso Not item.Contains("dvd") AndAlso Not item.Contains("bluray") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                    End Select
+                                                End If
+                                            Case "SD"
+                                                If Not item.Contains("720p") Or Not item.Contains("1080p") Then
+                                                    Select Case setSource
+                                                        Case "BluRay"
+                                                            If item.Contains("bdrip") Or item.Contains("bluray") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                        Case "DVD"
+                                                            If item.Contains("dvd") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                        Case "other"
+                                                            If Not item.Contains("bdrip") AndAlso Not item.Contains("dvd") AndAlso Not item.Contains("bluray") Then
+                                                                aReturn.Add(item)
+                                                            End If
+                                                    End Select
+                                                End If
+                                        End Select
+                                    End If
+                            End Select
                     End Select
 
                     'If item.Contains("720p") Or item.Contains("1080p") Then                                         'only choose HD movies or series
@@ -303,6 +309,9 @@ Module Module1
                     End If
                     If (settingsRead.Name = "series") Then
                         setSerie = Convert.ToBoolean(settingsRead.ReadInnerXml.ToString())
+                    End If
+                    If (settingsRead.Name = "listall") Then
+                        setAll = Convert.ToBoolean(settingsRead.ReadInnerXml.ToString())
                     End If
                 End If
             End While

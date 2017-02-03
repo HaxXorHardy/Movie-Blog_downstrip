@@ -1,10 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Settings>
   <!-- Possibile 720p 1080p SD -->
-  <quality>720p</quality>
+  <quality>SD</quality>
   <!-- Possible BluRay DVD other-->
-  <source>BluRay</source>
+  <source>other</source>
   <!-- Possible True False-->
-  <series>False</series>  
+  <series>False</series>
+  <!-- setting to list all films and series not sortet by quality etc[True False]-->
+  <listall>True</listall>
 </Settings>
 
