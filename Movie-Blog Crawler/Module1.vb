@@ -7,7 +7,7 @@ Imports System.Xml
 Module Module1
 
 #Region "Public_Dims"                                                                               'i think here is nothing to say
-    Dim dt As DateTime = Date.Today.AddDays(-3) 'for Testing
+    Dim dt As DateTime = Date.Today.AddDays(-1) 'for Testing
     'Dim dt As DateTime = Date.Today
     Dim month As String = dt.ToString("MM", CultureInfo.InvariantCulture)
     Dim year As String = dt.ToString("yyyy", CultureInfo.InvariantCulture)
@@ -21,26 +21,31 @@ Module Module1
         Try
             Dim settings As New ArrayList
             settings = settingHelper()
-            Dim findArr As New ArrayList
-            findArr = readFilms()
             Dim pages As Integer = pFinder()                                                                                    'Find numbrs of pages from Date.Today
             Dim linkList As New ArrayList
             Dim linkListHelper As New ArrayList
             Dim i As Integer = 1
-            Console.Write("Loading website...")
             While i <= pages
-                Console.Write(".")
+                Console.WriteLine("Pages: " & pages)
+                Console.WriteLine("Loading Pages...", nl)
+                Console.WriteLine("Load Page: " & i, nl)
                 linkListHelper = getShit(spiderurl & "page/" & i & "/")                                                                   'Take every page and search for Links
                 For Each item As String In linkListHelper
                     linkList.Add(item)
                 Next
+                Console.Clear()
                 i += 1
             End While
-            Console.WriteLine(nl)
+            Console.ForegroundColor = ConsoleColor.Red
+            Console.WriteLine("Start Parsing and get the Shit done!")
+            Console.ResetColor()
             For l As Integer = 1 To settings.Count / 5
                 Dim sum As Integer = (l - 1) * 5
+                Console.WriteLine(nl & "---------------------------------------" & nl & "Loading: " & settings(sum) & nl & "---------------------------------------" & nl)
                 Dim listH As New ArrayList
                 listH = listHelper(sum, settings, linkList)                                                                      'creates a link list from pages
+                Dim findArr As New ArrayList
+                findArr = readFilms(settings(sum).ToString)
                 Dim outP As New ArrayList
                 Dim x As Integer = 1
                 Dim cHelper As Boolean = False
@@ -233,7 +238,7 @@ Module Module1
             Dim HrefMatch As Match = HrefRegex.Match(strSource)                                                     'Find matches in String
             While HrefMatch.Success = True                                                                          'String Found = True 1 or more strings matching
                 Dim num As String = HrefMatch.Groups(1).Value                                                       'get first match
-                Console.WriteLine("Pages: " & num, nl)                                                              'output for testing
+                'Console.WriteLine("Pages: " & num, nl)                                                              'output for testing
                 aReturn = Convert.ToInt32(num)                                                                        'convert String to Integer
                 HrefMatch = HrefMatch.NextMatch                                                                     'More matches? get them and print this shit out
             End While
@@ -340,8 +345,8 @@ Module Module1
         Return aReturn
     End Function
 
-    Private Function readFilms()
-        Dim txtReader As New StreamReader(My.Application.Info.DirectoryPath & "\releases.txt")
+    Private Function readFilms(ByVal pathFile As String)
+        Dim txtReader As New StreamReader(My.Application.Info.DirectoryPath & "\" & pathFile)
         Dim ti As TextInfo = CultureInfo.CurrentCulture.TextInfo
         Dim sLine As String = Nothing
         Dim aReturn As New ArrayList()
@@ -360,6 +365,7 @@ Module Module1
     'Private Function getRealName(ByVal url As String)  'dont work only for testing
     '    Dim aReturn As String = Nothing
     '    Try
+
     '        Dim Request As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://www.moviepilot.de/movies/" & url)                         'new Webrequest
     '        Dim myWebResponse = CType(Request.GetResponse(), HttpWebResponse)                                        'shitty thing
     '        Dim myStreamReader = New StreamReader(myWebResponse.GetResponseStream())                                 'streamreader to get response from webrequest live
