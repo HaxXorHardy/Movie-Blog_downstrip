@@ -1,12 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Settings>
-  <!-- Possibile [720p 1080p SD] -->
-  <quality>1080p</quality>
-  <!-- Possible [BluRay DVD other]-->
-  <source>BluRay</source>
-  <!-- Possible [True False]-->
-  <series>False</series>
-  <!-- setting to list all films and series not sortet by quality etc[True False]-->
-  <listall>False</listall>
-</Settings>
+<settings>
+<options settingFile = "releases.txt" >			  <!-- Name of file to read film titles with fileextension(.txt)-->
+    <quality>1080p</quality>						      <!-- Possibile [720p 1080p SD] -->
+    <source>BluRay</source>							      <!-- Possible [BluRay DVD other]-->
+    <series>False</series>							      <!-- Possible [True False]-->
+    <listall>False</listall>						      <!-- setting to list all films and series not sortet by quality etc[True False]-->
+  </options>										              <!-- You can add more files for diferent users etc. now-->
+  <options settingFile = "releases2.txt" >
+     <quality>720p</quality>                     
+     <source>other</source>                      
+     <series>False</series>                      
+     <listall>True</listall>                    
+  </options>                                    
+  </settings>
 
