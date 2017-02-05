@@ -7,8 +7,8 @@ Imports System.Xml
 Module Module1
 
 #Region "Public_Dims"                                                                               'i think here is nothing to say
-    Dim dt As DateTime = Date.Today.AddDays(-1) 'for Testing
-    'Dim dt As DateTime = Date.Today
+    'Dim dt As DateTime = Date.Today.AddDays(-1) 'for Testing
+    Dim dt As DateTime = Date.Today
     Dim month As String = dt.ToString("MM", CultureInfo.InvariantCulture)
     Dim year As String = dt.ToString("yyyy", CultureInfo.InvariantCulture)
     Dim day As String = dt.ToString("dd", CultureInfo.InvariantCulture)
@@ -26,14 +26,22 @@ Module Module1
             Dim linkListHelper As New ArrayList
             Dim i As Integer = 1
             While i <= pages
-                Console.WriteLine("Pages: " & pages)
-                Console.WriteLine("Loading Pages...", nl)
-                Console.WriteLine("Load Page: " & i, nl)
+                Console.ForegroundColor = ConsoleColor.Green
+                Console.Write("Pages: ")
+                Console.ForegroundColor = ConsoleColor.Red
+                Console.Write(pages & nl)
+                Console.ForegroundColor = ConsoleColor.Green
+                Console.Write("Loading Pages..." & nl)
+                Console.ForegroundColor = ConsoleColor.Green
+                Console.Write("Load Page: ")
+                Console.ForegroundColor = ConsoleColor.Red
+                Console.Write(i & nl)
+                Console.ResetColor()
                 linkListHelper = getShit(spiderurl & "page/" & i & "/")                                                                   'Take every page and search for Links
                 For Each item As String In linkListHelper
                     linkList.Add(item)
                 Next
-                Console.Clear()
+                If Not i = pages Then Console.Clear()
                 i += 1
             End While
             Console.ForegroundColor = ConsoleColor.Red
@@ -55,7 +63,7 @@ Module Module1
                         If Not outP.Contains(retStr) Then
                             For Each arr As String In findArr
                                 If retStr.Contains(arr) Then
-                                    Console.ForegroundColor = ConsoleColor.Green
+                                    Console.ForegroundColor = ConsoleColor.Red
                                     Console.WriteLine((String.Format("{0:000}", x) & ": " & retStr), nl)
                                     Console.ResetColor()
                                     cHelper = True
@@ -63,7 +71,9 @@ Module Module1
                             Next
                             outP.Add(retStr)
                             If cHelper = False Then
+                                Console.ForegroundColor = ConsoleColor.Green
                                 Console.WriteLine((String.Format("{0:000}", x) & ": " & retStr), nl)
+                                Console.ResetColor()
                             End If
                             writeFile(item.ToString, retStr)
                             cHelper = False
@@ -72,7 +82,7 @@ Module Module1
                     End If
                 Next
             Next
-            Console.WriteLine("Ende.....")
+            Console.WriteLine(nl & nl & "Ende.....")
             Console.ReadLine()                                                                                                  'let the Consolewindow stay open
             File.Delete(My.Application.Info.DirectoryPath & "\MyTest.html")
         Catch ex As Exception
