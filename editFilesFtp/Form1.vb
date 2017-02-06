@@ -1,20 +1,22 @@
 ﻿Imports System.ComponentModel
 Imports System.Globalization
 Imports System.IO
+Imports System.Net
 Imports System.Xml
 
 Public Class Form1
 
 #Region "Dims"
     Dim nl As String = Environment.NewLine
+    Private WithEvents ftpWebclient As New WebClient
+
 #End Region
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Dim settings As New ArrayList
         settings = settingHelper()
         Dim getList As New ArrayList
         getList = getFile(settings)
-
         fillBox(getList)
     End Sub
 
@@ -38,9 +40,11 @@ Public Class Form1
         Dim aReturn As New ArrayList
         Try
             Dim pathFile As String = My.Application.Info.DirectoryPath & "\" & settings(0)
-            Dim wc As New Net.WebClient
-            My.Computer.Network.DownloadFile(settings(1) & settings(0), pathFile, settings(2), settings(3)) 'get file from Ftpserver with ans dave in directory
-            'My.Computer.Network.UploadFile("Dateipfad", "ftp://deineFTPseite.com/Dateiname+Endung", "Username", "Passwort")
+            File.Delete(pathFile)
+
+            Dim myUri As New Uri(settings(1) & settings(0))
+            ftpWebclient.Credentials = New System.Net.NetworkCredential(settings(2), settings(3))
+            ftpWebclient.DownloadFile(myUri, pathFile)
 
             'now read the file and fill aReturn
             Dim txtReader As New StreamReader(pathFile)
@@ -60,8 +64,6 @@ Public Class Form1
         End Try
         Return aReturn
     End Function
-
-
 
     Private Function settingHelper()            'read the setting.xml file
         Dim aReturn As New ArrayList
@@ -124,15 +126,36 @@ Public Class Form1
         Dim aReturn As Boolean = False
         Try
             Dim pathFile As String = My.Application.Info.DirectoryPath & "\" & settings(0)
-            Dim wc As New Net.WebClient
-            If My.Computer.Network.UploadFile(pathFile, settings(1) & settings(0), settings(2), settings(3)) Then
-                aReturn = True
-            End If
+            Dim myUri As New Uri(settings(1) & settings(0))
+            ftpWebclient.Credentials = New System.Net.NetworkCredential(settings(2), settings(3))
+            ftpWebclient.UploadFileAsync(myUri, pathFile)
+            aReturn = True
         Catch ex As Exception
             Debug.WriteLine(ex.ToString(), nl)
         End Try
         Return aReturn
     End Function
+
+    Private Sub ftpWebclient_DownloadFileCompleted(sender As Object, e As AsyncCompletedEventArgs) Handles ftpWebclient.DownloadFileCompleted
+        If e.Error IsNot Nothing Then
+            MessageBox.Show(e.Error.Message)
+        End If
+    End Sub
+
+    Private Sub ftpWebclient_UploadFileCompleted(sender As Object, e As System.Net.UploadFileCompletedEventArgs) Handles ftpWebclient.UploadFileCompleted
+        If e.Error IsNot Nothing Then
+            MessageBox.Show(e.Error.Message)
+        End If
+    End Sub
+
+    Private Sub ftpWebclient_DownloadProgressChanged(sender As Object, e As DownloadProgressChangedEventArgs) Handles ftpWebclient.DownloadProgressChanged
+        progBar.Value = e.ProgressPercentage
+    End Sub
+
+    Private Sub ftpWebclient_UploadProgressChanged(sender As Object, e As System.Net.UploadProgressChangedEventArgs) Handles ftpWebclient.UploadProgressChanged
+        progBar.Value = e.ProgressPercentage
+    End Sub
+
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         Dim settings As New ArrayList
         settings = settingHelper()
@@ -145,4 +168,6 @@ Public Class Form1
             MessageBox.Show("Somthing went wrong!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1)
         End If
     End Sub
+
+
 End Class
