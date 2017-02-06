@@ -2,6 +2,8 @@
 Imports System.Globalization
 Imports System.IO
 Imports System.Net
+Imports System.Security.Cryptography
+Imports System.Text
 Imports System.Xml
 
 Public Class Form1
@@ -12,12 +14,14 @@ Public Class Form1
 
 #End Region
 
-    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+    Private Sub Form1_Activated(sender As Object, e As EventArgs) Handles Me.Activated
         Dim settings As New ArrayList
         settings = settingHelper()
         Dim getList As New ArrayList
         getList = getFile(settings)
         fillBox(getList)
+        TextBox1.Text = Nothing
+        statLabel.Text = "All loaded!"
     End Sub
 
     Private Sub fillBox(ByVal list As ArrayList)
@@ -33,7 +37,6 @@ Public Class Form1
             End If
         Next
     End Sub
-
 
     Private Function getFile(ByVal settings As ArrayList)
 
@@ -76,9 +79,9 @@ Public Class Form1
             nodelist = settings.SelectNodes("/settings/options")            'Xml-tree
             For Each node In nodelist
                 aReturn.Add(node.Attributes.GetNamedItem("settingFile").Value.ToString)
-                aReturn.Add(node.SelectSingleNode("ftpserver").InnerText)
-                aReturn.Add(node.SelectSingleNode("username").InnerText)
-                aReturn.Add(node.SelectSingleNode("password").InnerText)
+                aReturn.Add(deCrypt(node.SelectSingleNode("ftpserver").InnerText))
+                aReturn.Add(deCrypt(node.SelectSingleNode("username").InnerText))
+                aReturn.Add(deCrypt(node.SelectSingleNode("password").InnerText))
                 Debug.WriteLine("filename: " & aReturn(0) & nl & "Ftpserver: " & aReturn(1) & nl & "Username: " & aReturn(2) & nl & "Password: " & aReturn(3), nl)
             Next
         Catch ex As Exception
@@ -89,9 +92,27 @@ Public Class Form1
 
     Private Sub buttonAdd_Click(sender As Object, e As EventArgs) Handles buttonAdd.Click
         Try
-            CheckedListBox1.Items.Insert(CheckedListBox1.Items.Count, TextBox1.Text)
-            CheckedListBox1.SetItemChecked(CheckedListBox1.Items.Count - 1, True)
-            TextBox1.Text = Nothing
+            If Not TextBox1.Text = Nothing Then
+                CheckedListBox1.Items.Insert(CheckedListBox1.Items.Count, TextBox1.Text)
+                CheckedListBox1.SetItemChecked(CheckedListBox1.Items.Count - 1, True)
+                TextBox1.Text = Nothing
+                statLabel.Text = "Item added!"
+            Else
+                statLabel.Text = "Empty field!"
+            End If
+        Catch ex As Exception
+            Debug.WriteLine(ex.ToString(), nl)
+        End Try
+    End Sub
+
+    Private Sub buttonRemove_Click(sender As Object, e As EventArgs) Handles buttonRemove.Click
+        Try
+            For i = CheckedListBox1.Items.Count - 1 To 0 Step -1
+                If Not CheckedListBox1.GetItemChecked(i) Then
+                    CheckedListBox1.Items.RemoveAt(i)
+                    statLabel.Text = "Item(s) removed!"
+                End If
+            Next
         Catch ex As Exception
             Debug.WriteLine(ex.ToString(), nl)
         End Try
@@ -100,8 +121,12 @@ Public Class Form1
     Private Function getItems()
         Dim aReturn As New ArrayList
         Try
-            For Each itemChecked In CheckedListBox1.CheckedItems
-                aReturn.Add(itemChecked.ToString)
+            For i As Integer = 0 To (CheckedListBox1.Items.Count - 1)
+                If CheckedListBox1.GetItemChecked(i) Then
+                    aReturn.Add(CheckedListBox1.Items(i).ToString & "#")
+                Else
+                    aReturn.Add(CheckedListBox1.Items(i).ToString)
+                End If
             Next
         Catch ex As Exception
             Debug.WriteLine(ex.ToString(), nl)
@@ -114,7 +139,7 @@ Public Class Form1
             Dim pathFile As String = My.Application.Info.DirectoryPath & "\" & settings(0)
             Dim txtWriter As New StreamWriter(pathFile)
             For Each item As String In list
-                txtWriter.WriteLine(item & "#")
+                txtWriter.WriteLine(item)
             Next
             txtWriter.Close()
         Catch ex As Exception
@@ -133,6 +158,29 @@ Public Class Form1
         Catch ex As Exception
             Debug.WriteLine(ex.ToString(), nl)
         End Try
+        Return aReturn
+    End Function
+
+    Private Function deCrypt(ByVal pw As String)
+        Dim aReturn As String
+        Dim cr As String = "Ö;EY,/rwÖZrG{rvx$f.Ät2br5Ü,VER"
+        Dim rd As New RijndaelManaged
+        Dim rijndaelIvLength As Integer = 16
+        Dim md5 As New MD5CryptoServiceProvider
+        Dim key() As Byte = md5.ComputeHash(Encoding.UTF8.GetBytes(cr))
+        md5.Clear()
+        Dim encdata() As Byte = Convert.FromBase64String(pw)
+        Dim ms As New MemoryStream(encdata)
+        Dim iv(15) As Byte
+        ms.Read(iv, 0, rijndaelIvLength)
+        rd.IV = iv
+        rd.Key = key
+        Dim cs As New CryptoStream(ms, rd.CreateDecryptor, CryptoStreamMode.Read)
+        Dim data(ms.Length - rijndaelIvLength) As Byte
+        Dim i As Integer = cs.Read(data, 0, data.Length)
+        aReturn = System.Text.Encoding.UTF8.GetString(data, 0, i)
+        cs.Close()
+        rd.Clear()
         Return aReturn
     End Function
 
@@ -162,12 +210,12 @@ Public Class Form1
         Dim saveItems As New ArrayList
         saveItems = getItems()
         writeList(saveItems, settings)
+        statLabel.Text = "All done! Seeya!"
         If setFile(settings) Then
             MessageBox.Show("Uploading Finished!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Else
             MessageBox.Show("Somthing went wrong!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1)
         End If
     End Sub
-
 
 End Class

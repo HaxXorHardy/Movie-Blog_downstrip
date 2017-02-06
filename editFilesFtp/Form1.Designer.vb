@@ -26,7 +26,8 @@ Partial Class Form1
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.buttonAdd = New System.Windows.Forms.Button()
         Me.progBar = New System.Windows.Forms.ProgressBar()
-        Me.StatusLabel = New System.Windows.Forms.Label()
+        Me.buttonRemove = New System.Windows.Forms.Button()
+        Me.statLabel = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'CheckedListBox1
@@ -60,20 +61,31 @@ Partial Class Form1
         Me.progBar.Size = New System.Drawing.Size(112, 10)
         Me.progBar.TabIndex = 4
         '
-        'StatusLabel
+        'buttonRemove
         '
-        Me.StatusLabel.AutoSize = True
-        Me.StatusLabel.Location = New System.Drawing.Point(144, 304)
-        Me.StatusLabel.Name = "StatusLabel"
-        Me.StatusLabel.Size = New System.Drawing.Size(0, 13)
-        Me.StatusLabel.TabIndex = 5
+        Me.buttonRemove.Location = New System.Drawing.Point(94, 40)
+        Me.buttonRemove.Name = "buttonRemove"
+        Me.buttonRemove.Size = New System.Drawing.Size(75, 23)
+        Me.buttonRemove.TabIndex = 6
+        Me.buttonRemove.Text = "- Delete"
+        Me.buttonRemove.UseVisualStyleBackColor = True
+        '
+        'statLabel
+        '
+        Me.statLabel.Location = New System.Drawing.Point(130, 304)
+        Me.statLabel.Name = "statLabel"
+        Me.statLabel.Size = New System.Drawing.Size(182, 12)
+        Me.statLabel.TabIndex = 7
+        Me.statLabel.Text = "Label1"
+        Me.statLabel.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(318, 325)
-        Me.Controls.Add(Me.StatusLabel)
+        Me.Controls.Add(Me.statLabel)
+        Me.Controls.Add(Me.buttonRemove)
         Me.Controls.Add(Me.progBar)
         Me.Controls.Add(Me.buttonAdd)
         Me.Controls.Add(Me.TextBox1)
@@ -92,5 +104,6 @@ Partial Class Form1
     Friend WithEvents TextBox1 As TextBox
     Friend WithEvents buttonAdd As Button
     Friend WithEvents progBar As ProgressBar
-    Friend WithEvents StatusLabel As Label
+    Friend WithEvents buttonRemove As Button
+    Friend WithEvents statLabel As Label
 End Class
