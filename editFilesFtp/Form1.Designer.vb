@@ -76,7 +76,6 @@ Partial Class Form1
         Me.statLabel.Name = "statLabel"
         Me.statLabel.Size = New System.Drawing.Size(182, 12)
         Me.statLabel.TabIndex = 7
-        Me.statLabel.Text = "Label1"
         Me.statLabel.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'Form1

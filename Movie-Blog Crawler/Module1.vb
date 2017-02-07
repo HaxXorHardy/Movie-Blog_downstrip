@@ -9,23 +9,27 @@ Module Module1
 #Region "Public_Dims"                                                                               'i think here is nothing to say
     'Dim dt As DateTime = Date.Today.AddDays(-1) 'for Testing
     Dim dt As DateTime = Date.Today
-    Dim month As String = dt.ToString("MM", CultureInfo.InvariantCulture)
-    Dim year As String = dt.ToString("yyyy", CultureInfo.InvariantCulture)
-    Dim day As String = dt.ToString("dd", CultureInfo.InvariantCulture)
     Const quote As String = Chr(34)                                                                 'quote(") for text 
-    Public spiderurl = "http://www.movie-blog.org/" & year & "/" & month & "/" & day & "/"          'the mainurl from Today 
     Dim nl = Environment.NewLine
 #End Region
 
     Sub Main()
         Try
+            Dim month As String = dt.ToString("MM", CultureInfo.InvariantCulture)
+            Dim year As String = dt.ToString("yyyy", CultureInfo.InvariantCulture)
+            Dim day As String = dt.ToString("dd", CultureInfo.InvariantCulture)
+            Dim spiderurl = "http://www.movie-blog.org/" & year & "/" & month & "/" & day & "/"          'the mainurl from Today 
             Dim settings As New ArrayList
             settings = settingHelper()
-            Dim pages As Integer = pFinder()                                                                                    'Find numbrs of pages from Date.Today
+            Dim pages As Integer = pFinder(spiderurl)                                                                                    'Find numbrs of pages from Date.Today
             Dim linkList As New ArrayList
             Dim linkListHelper As New ArrayList
             Dim i As Integer = 1
             While i <= pages
+                Console.ForegroundColor = ConsoleColor.Green
+                Console.Write("Page from Date: ")
+                Console.ForegroundColor = ConsoleColor.Red
+                Console.Write(dt.ToString("dd-MM-yyyy") & nl)
                 Console.ForegroundColor = ConsoleColor.Green
                 Console.Write("Pages: ")
                 Console.ForegroundColor = ConsoleColor.Red
@@ -37,7 +41,7 @@ Module Module1
                 Console.ForegroundColor = ConsoleColor.Red
                 Console.Write(i & nl)
                 Console.ResetColor()
-                linkListHelper = getShit(spiderurl & "page/" & i & "/")                                                                   'Take every page and search for Links
+                linkListHelper = getShit(spiderurl & "page/" & i & "/", spiderurl)                                                                   'Take every page and search for Links
                 For Each item As String In linkListHelper
                     linkList.Add(item)
                 Next
@@ -58,7 +62,7 @@ Module Module1
                 Dim x As Integer = 1
                 Dim cHelper As Boolean = False
                 For Each item As String In listH
-                    Dim retStr As String = findTitle(item)
+                    Dim retStr As String = findTitle(item, spiderurl)
                     If Not retStr = Nothing Then
                         If Not outP.Contains(retStr) Then
                             For Each arr As String In findArr
@@ -82,6 +86,14 @@ Module Module1
                     End If
                 Next
             Next
+            dt = dt.AddDays(-1)
+            Console.WriteLine(nl & nl & "Hit ENTER to check " & dt.ToString("dd-MM-yyyy") & " <---- this date!")
+            Do
+                While Not Console.KeyAvailable
+                End While
+            Loop While Console.ReadKey(True).Key <> ConsoleKey.Enter
+            Console.Clear()
+            Main()
             Console.WriteLine(nl & nl & "Ende.....")
             Console.ReadLine()                                                                                                  'let the Consolewindow stay open
             File.Delete(My.Application.Info.DirectoryPath & "\MyTest.html")
@@ -234,7 +246,7 @@ Module Module1
         fileWrite.Close()                                                                                        'close Streamwriter
     End Sub
 
-    Private Function pFinder()
+    Private Function pFinder(ByVal spiderurl As String)
         Dim aReturn As Integer = Nothing
         Try
             '<span class="pages">Seite 2 von 11</span>  find 11
@@ -259,7 +271,7 @@ Module Module1
         Return aReturn
     End Function
 
-    Private Function getShit(ByVal url As String) As ArrayList
+    Private Function getShit(ByVal url As String, ByVal spiderurl As String) As ArrayList
         Dim aReturn As New ArrayList                                                                                 'create the returnvariable
         Try
             Dim strRegex As String = "<a.*?href=""(.*?)"".*?>(.*?)</a>"                                              'crasy regex string to find Pagenumbers
@@ -285,7 +297,7 @@ Module Module1
         Return aReturn
     End Function
 
-    Private Function findTitle(ByVal str As String)
+    Private Function findTitle(ByVal str As String, ByVal spiderurl As String)
         Dim aReturn As String = Nothing
         Try
             Dim ti As TextInfo = CultureInfo.CurrentCulture.TextInfo
@@ -318,10 +330,10 @@ Module Module1
                     regStrG = regStrG.Replace("-", " ")
                     ' End If
                     aReturn = ti.ToTitleCase(regStrG)                                                                    'Word correction (uppercase chars)
-                        'Console.WriteLine(aReturn & nl, nl)
-                        Return aReturn
-                    Else
-                    End If
+                    'Console.WriteLine(aReturn & nl, nl)
+                    Return aReturn
+                Else
+                End If
             End If
         Catch ex As Exception
             Console.WriteLine(ex.Message, nl)                                                                       'Errorhandling for user debugging
@@ -363,8 +375,10 @@ Module Module1
         Do
             sLine = txtReader.ReadLine()
             If Not sLine Is Nothing Then
-                sLine = ti.ToTitleCase(sLine.Replace("ä", "ae").Replace("ö", "oe").Replace("ü", "ue").Replace("ß", "ss").Replace("-", " "))
-                aReturn.Add(sLine)
+                If sLine.Contains("#") Then
+                    sLine = ti.ToTitleCase(sLine.Replace("ä", "ae").Replace("ö", "oe").Replace("ü", "ue").Replace("ß", "ss").Replace("-", " ").Replace("#", ""))
+                    aReturn.Add(sLine)
+                End If
             End If
         Loop Until sLine Is Nothing
         txtReader.Close()
