@@ -3,6 +3,8 @@ Imports System.IO
 Imports System.Net
 Imports System.Text.RegularExpressions
 Imports System.Xml
+Imports MySql.Data.MySqlClient
+
 
 Module Module1
 
