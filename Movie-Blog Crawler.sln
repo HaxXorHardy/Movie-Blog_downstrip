@@ -9,6 +9,10 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "editFilesFtp", "editFilesFt
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "settingsCrypter", "settingsCrypter\settingsCrypter.vbproj", "{A839AD86-3D56-412D-AC39-DE1144A70CF1}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TCP_Client", "..\..\..\..\Desktop\MultiServer Sample\SampleClient\SampleClient\TCP_Client.vbproj", "{93A71082-14B8-4D33-9231-C8188C80FC0E}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TCP_Server", "..\..\..\..\Desktop\MultiServer Sample\MultiServer\MultiServer\TCP_Server.vbproj", "{DD1DBF43-4886-4EB6-8035-B9EA4382B34A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{A839AD86-3D56-412D-AC39-DE1144A70CF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A839AD86-3D56-412D-AC39-DE1144A70CF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A839AD86-3D56-412D-AC39-DE1144A70CF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93A71082-14B8-4D33-9231-C8188C80FC0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93A71082-14B8-4D33-9231-C8188C80FC0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93A71082-14B8-4D33-9231-C8188C80FC0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93A71082-14B8-4D33-9231-C8188C80FC0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD1DBF43-4886-4EB6-8035-B9EA4382B34A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD1DBF43-4886-4EB6-8035-B9EA4382B34A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD1DBF43-4886-4EB6-8035-B9EA4382B34A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD1DBF43-4886-4EB6-8035-B9EA4382B34A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
