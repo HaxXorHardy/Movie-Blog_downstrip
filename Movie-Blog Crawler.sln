@@ -13,6 +13,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TCP_Client", "SampleClient\
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TCP_Server", "MultiServer\TCP_Server.vbproj", "{DD1DBF43-4886-4EB6-8035-B9EA4382B34A}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "testMySql", "testMySql\testMySql.vbproj", "{2060092B-0EF2-4660-90C2-49E52655ABC6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{DD1DBF43-4886-4EB6-8035-B9EA4382B34A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD1DBF43-4886-4EB6-8035-B9EA4382B34A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD1DBF43-4886-4EB6-8035-B9EA4382B34A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2060092B-0EF2-4660-90C2-49E52655ABC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2060092B-0EF2-4660-90C2-49E52655ABC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2060092B-0EF2-4660-90C2-49E52655ABC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2060092B-0EF2-4660-90C2-49E52655ABC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
